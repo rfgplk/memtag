@@ -1,0 +1,19 @@
+# build.ninja
+timer = /usr/bin/time -p
+compiler_gnu = g++
+compiler_llvm = clang++
+cflags_gnu_debug =  -std=c++23 -g -mavx2 -march=native -Wall -Wextra -Wfatal-errors -Wno-cpp -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wunused -fopenmp -fext-numeric-literals -fdiagnostics-color=always
+cflags_gnu =  -std=c++23 -Ofast -mavx2 -march=native -Wall -Wextra -Wfatal-errors -Wno-cpp -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wunused -fopenmp -fext-numeric-literals -ffast-math -flto -fdiagnostics-color=always
+cflags_llvm = -std=c++23 -Ofast -mavx2 -march=native -Weverything -Wall -Wextra -Wfatal-errors -Wno-cpp -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wunused -fopenmp -ffast-math -flto -fdiagnostics-color=always
+
+
+clibs_location = -L./libs
+clibs_includes = -Isrc
+
+build_directory = bin
+
+rule memtag_compile
+  command = echo -e "\n\n\033[1;32mBuilding:\033[0m $out" && mkdir $build_directory && $timer $compiler_gnu $cflags_gnu $clibs_location $clibs_includes $in -o $build_directory/$out;
+
+
+build build_memtag_demo_1: memtag_compile src/demo.cpp
